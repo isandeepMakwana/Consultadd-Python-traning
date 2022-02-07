@@ -7,9 +7,9 @@ from sqlalchemy import null
 app = Flask(__name__)
 
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:MakW@1239@localhost/testdb'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
 db = SQLAlchemy(app)
-
 @dataclass
 class Employee(db.Model):
     id:int
@@ -96,20 +96,10 @@ def delEmp(id):
     except:
         return "can't deleted data !!!"
 
-# @app.route("/login/<name>")
-# def loginFunction(name):
-#     return f'welcom {name}'
-#
-# @app.route("/success",methods=["GET","POST"])
-# def data():
-#     if request.method=='POST':
-#         return request.data
-#     else:
-#         return  f"method is {request.method} "
-
 @app.route("/")
 def hello():
     return "welcome to flask application"
 if __name__ == '__main__':
     db.create_all()
-    app.run(debug=True, port=9090)
+    app.run(debug=False, port=9090)
+    
