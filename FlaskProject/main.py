@@ -22,12 +22,14 @@ class Employee(db.Model):
     manager = db.Column(db.String(20), nullable=False)
 @dataclass
 class Department(db.Model):
+    id:int
     dept:str
-    emp:Employee
-    dept = db.Column(db.String(20), db.ForeignKey(Employee.dept),primary_key=True)
-    emp = db.relationship(Employee)
+    manager:str
+    id = db.Column(db.Integer, primary_key=True)
+    dept = db.Column(db.String(20), db.ForeignKey(Employee.dept))
+    manager = db.Column(db.String(20))
+    
 
-# add and Get    
 @app.route("/employee",methods=["GET","POST"])
 def Emp():
     if request.method=='POST':
@@ -37,7 +39,7 @@ def Emp():
         dept=data.get('dept')
         manager=data.get('manager')
         new_Emp = Employee(id=id, name=name, dept=dept, manager=manager)
-        new_Dept = Department(dept=dept, emp=new_Emp)
+        new_Dept = Department(id=id, dept=dept, manager=manager)
         try:
             db.session.add(new_Emp)
             db.session.add(new_Dept)
@@ -54,10 +56,12 @@ def Dep():
     data= Department.query.all()
     return jsonify(data)
 
-#update
+
 @app.route("/updateEmp/<int:id>" , methods=["PUT"])
 def updEmp(id):
-    emp = Employee.query.get_or_404(id)
+    emp = Employee.query.get(id)
+    if(emp==null):
+        return "not found "
     data = request.get_json()
     name = data.get('name')
     dept=data.get('dept')
