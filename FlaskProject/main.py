@@ -1,13 +1,13 @@
-from crypt import methods
 import json
+from crypt import methods
 from dataclasses import dataclass
+
 from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import null
+
 app = Flask(__name__)
 
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:MakW@1239@localhost/testdb'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
 db = SQLAlchemy(app)
 @dataclass
@@ -101,5 +101,5 @@ def hello():
     return "welcome to flask application"
 if __name__ == '__main__':
     db.create_all()
-    app.run(debug=False, port=9090)
+    app.run(debug=True, port=5000)
     
