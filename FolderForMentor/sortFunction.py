@@ -1,7 +1,10 @@
 
 from argparse import ArgumentError
-
 class MyCollection:
+    def __init__(self):
+        self._x=[]
+        self._second_list=[]
+        self._new_dict={}
     def __check1__(self,a, b,reverse=False):
         if reverse:
             return a>=b
@@ -43,10 +46,21 @@ class MyCollection:
         return x
 
     def Mysort(self,container_obj, sortBy="key",reversed=False):
-        x=[]
+        x=self._x
         if type(container_obj)==type([]):
-            x=[i for i in container_obj]
-            return self.__sortFun__(x,reversed)
+            if(sortBy!="key" and sortBy!="value"):
+                lst=self._second_list # i am using list for repited elements
+                for i in container_obj:
+                    try:
+                        lst.append([i[sortBy],i])
+                    except KeyError:
+                        raise KeyError("please pass correct key : in sortBy=<key>")
+                self.__sortFun__(lst,reversed)
+                x=[i[1] for i in lst]
+                return x
+            else:
+                x=[i for i in container_obj]
+                return self.__sortFun__(x,reversed)
         elif type(container_obj)==type({}):
             if(sortBy=="key"):
                 x=[i for i in container_obj.keys()]
@@ -55,8 +69,8 @@ class MyCollection:
             else:
                 raise ArgumentError("USAGE: sortBy BY SUPPORTS ONLY 'key and value' ")
             self.__sortFun__(x,reversed)
-            _new_dict = {i:container_obj[i] for i in x}
-            return _new_dict
+            self._new_dict = {i:container_obj[i] for i in x}
+            return self._new_dict
 
    
 '''
@@ -109,4 +123,20 @@ print(MyCollection().Mysort(),sortBy="value" , reversed=True)
 
 '''
 
-print(MyCollection().Mysort([int((i%4+i%5+i/2)%10) for i in range(10)],reversed=True))
+# print(MyCollection().Mysort([int((i%4+i%5+i/2)%10) for i in range(10)],reversed=True))
+
+list_of_dict=[
+{"name": "navin", "isIndian": False, "miceCaught": 0,"age": 21},
+{"name": "pradeep", "isIndian": True, "miceCaught": 0,"age": 20},
+{"name": "nitin", "isIndian": True, "miceCaught": 0,"age": 24},
+{"name": "pawan", "isIndian": True, "miceCaught": 0,"age": 25},
+{"name": "rishak", "isIndian": True, "miceCaught": 0,"age": 32},
+{"name": "anup", "isIndian": False, "miceCaught": 0,"age": 56}
+]
+print("printing in increasing order")
+for i in (MyCollection().Mysort(list_of_dict,sortBy="name")):
+    print(i)
+print("printing in decreasing order")
+_=print
+for i in (MyCollection().Mysort(list_of_dict,sortBy="name",reversed=True)):
+    _(i)
